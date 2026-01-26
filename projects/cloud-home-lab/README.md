@@ -1,8 +1,3 @@
-# 🧰 Personal Cloud & Home Lab Platform  
-### Hybrid On-Prem Infrastructure & Automation Environment
-
----
-
 # 🧰 Personal Cloud & Home Lab Platform
 ### Hybrid On-Prem & Cloud Infrastructure
 
