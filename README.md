@@ -136,7 +136,7 @@ REST API backed by MySQL/MariaDB providing:
   - `health` – periodic middleware health status
 
 ## Configuration (Environment Variables – main ones)
-
+```nginx
 - `PORT`  
 - `DATALOAD_ENDPOINT`  
 - `DATALOAD_TOKEN`  
@@ -146,7 +146,7 @@ REST API backed by MySQL/MariaDB providing:
 - `PLUGINS_ENABLED`  
 - `HEALTH_INTERVAL`  
 - `MAX_CONNECTIONS`
-
+```
 Config file: `.env`
 
 ## Runtime & Operations
