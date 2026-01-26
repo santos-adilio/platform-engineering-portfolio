@@ -3,26 +3,15 @@
 
 ---
 
-## Overview
+# 🧰 Personal Cloud & Home Lab Platform
+### Hybrid On-Prem & Cloud Infrastructure
 
-This project implements a personal hybrid on-prem and cloud lab designed to simulate production-like infrastructure, automation workflows, and platform engineering practices.
+## 🏗 Overview
 
-The environment is built to support:
+This environment simulates production-like infrastructure using virtualization, container platforms, networking, automation, and developer tooling.
 
-- Virtualization and container orchestration  
-- Automation and IoT management  
-- CI / SCM services  
-- Networking and security experimentation  
-- Observability and reliability testing  
-- Bare metal vs containerized workload comparison  
+## 📌 Architecture
 
-The lab is used as a continuous learning and experimentation platform for cloud, DevOps, SRE, and platform engineering practices.
-
----
-
-## Architecture Summary
-
-High-level environment layout:
 ```lua
                     +-------------------+
                     |     Internet      |
