@@ -1,29 +1,27 @@
-⭐ Telemetry & Observability Middleware – Architecture Overview
-1. Overview
+# 🚀 Telemetry & Observability Middleware  
+**Real-time Data Ingestion & Streaming Platform**
 
-This project implements a production-like telemetry and observability middleware designed to collect, process, and distribute real-time data from a Linux-based online service.
+## Overview
 
-The system receives structured telemetry data via REST, processes and enriches the payload through a modular plugin pipeline, and broadcasts the processed data in real time to connected clients via secure WebSocket connections.
-It also exposes a whitelist and control API backed by a relational database to support dashboards, monitoring, auditing, and automation workflows.
+This project implements a production-grade telemetry and observability middleware designed to collect, process, and distribute real-time data from a Linux-based online service.
 
-The platform is designed with a strong focus on modularity, reliability, security, and extensibility.
+The platform:
 
-2. Architecture Summary
+- Ingests structured telemetry via secure REST endpoints  
+- Processes and enriches data through a modular plugin pipeline  
+- Broadcasts the processed payload in real time to connected clients via **WebSocket**  
+- Exposes a secure whitelist and control API backed by a relational database to support dashboards, monitoring, auditing, and automation workflows
 
-Core responsibilities:
+**Core design focus:**
 
-Ingest telemetry data from external services via REST
+- Modularity and extensibility  
+- Fault tolerance and reliability  
+- Security and access control  
+- Real-time data streaming  
+- Operational observability
 
-Process and enrich data using a modular plugin pipeline
-
-Distribute processed data in real time via WebSocket
-
-Expose a secure whitelist API backed by MySQL/MariaDB
-
-Provide health checks, status endpoints, logging, and operational controls
-
-High-level architecture:
-
+## High-level Architecture
+```sql
 External Service
       |
       |  HTTPS REST (Bearer token)
@@ -38,168 +36,171 @@ External Service
      v             v
 Whitelist API   Dashboards / Clients
 (MySQL)         (Realtime consumers)
+```
+- Ingest telemetry from external services via REST  
+- Authenticate and validate incoming payloads  
+- Process and enrich data using a configurable plugin pipeline  
+- Broadcast processed data in real time via WebSocket  
+- Expose whitelist and control APIs (MySQL/MariaDB backed)  
+- Provide health checks, status endpoints, structured logging, and operational controls
 
-3. Data Flow
+## Data Flow
 
-External service sends telemetry data via POST /update using HTTPS and Bearer token authentication.
+1. External service sends telemetry via `POST /update` (HTTPS + Bearer token)  
+2. Middleware validates authentication and payload structure  
+3. Payload passes through the configurable plugin pipeline for enrichment, analytics, anomaly detection, etc.  
+4. Processed payload is broadcast in real time to all connected WebSocket clients  
+5. Periodic health and status messages are emitted for monitoring
 
-The middleware validates authentication and performs structural validation.
+## Core Components
 
-The payload passes through a configurable plugin pipeline for enrichment, analytics, and anomaly detection.
+### 1. Telemetry Server
 
-The processed payload is broadcast in real time to connected WebSocket clients.
+- **Stack**: Node.js, Express, HTTPS, ws (WebSocket)  
+- REST ingestion endpoints  
+- Real-time WebSocket distribution  
+- Token-based authentication & validation  
+- Plugin execution orchestration  
+- Structured logging and fault handling  
+- Health & status endpoints
 
-Periodic health and status messages are emitted for monitoring purposes.
-
-4. Core Components
-Telemetry Server
-
-Node.js + Express + HTTPS
-
-REST ingestion endpoints
-
-WebSocket real-time distribution
-
-Health checks and operational status
-
-Responsibilities:
-
-Authentication and request validation
-
-Plugin execution orchestration
-
-Broadcast to connected clients
-
-Logging and fault handling
-
-Plugin Processing Pipeline
+### 2. Plugin Processing Pipeline
 
 Modular plugin-based architecture where each plugin:
 
-Operates independently
+- Runs independently  
+- Can validate, transform, enrich, or analyze payloads  
+- Implements its own caching and fault handling  
+- Can be enabled/disabled dynamically
 
-Can validate, transform, enrich, or analyze the payload
+**Example plugins:**
 
-Implements caching, fault handling, and execution control
+- Payload validation  
+- Analytics & metrics enrichment  
+- Basic anomaly detection  
+- Domain-specific processors (environment, users, economy, state, …)
 
-Examples of plugins:
+**Features:**
 
-Payload validation
+- Controlled execution order  
+- Per-plugin fault isolation  
+- Retry and cooldown mechanisms  
+- Extensible design
 
-Analytics and metrics enrichment
+### 3. Whitelist & Control API
 
-Simple anomaly detection
+REST API backed by MySQL/MariaDB providing:
 
-Domain-specific processors (environment, users, economy, state)
+- IP-based validation  
+- User/identity lookup  
+- Statistics and audit trails  
+- Access control for dashboards and automation
 
-The architecture supports:
+## Security & Reliability
 
-Extensibility
+**Security Features**
 
-Controlled execution order
+- HTTPS with TLS certificates  
+- Bearer token authentication (REST)  
+- Token-based authentication (WebSocket via query string)  
+- Rate limiting  
+- Security headers  
+- Centralized configuration validation
 
-Fault isolation
+**Reliability Features**
 
-Retry and cooldown mechanisms
+- Plugin-level fault isolation  
+- Retry logic for transient failures  
+- Structured logging  
+- Health & status endpoints  
+- Connection limits and resource controls
 
-Whitelist & Control API
+## REST API – Main Endpoints
 
-REST API backed by MySQL/MariaDB
+| Method | Endpoint     | Description                            |
+|--------|--------------|----------------------------------------|
+| POST   | `/update`    | Ingest telemetry payload               |
+| GET    | `/health`    | Basic health check                     |
+| GET    | `/status`    | Detailed status (plugins, connections) |
+| POST   | `/command`   | Send commands to external service      |
 
-Token-based authentication
+**Authentication:** `Authorization: Bearer <TOKEN>`
 
-Supports:
+## WebSocket
 
-IP validation
+- **Path**: `/data/` (configurable)  
+- **Authentication**: token passed via query string  
+- **Message Types**:
+  - `init`   – connection initialized  
+  - `data`   – processed telemetry payload  
+  - `health` – periodic middleware health status
 
-User and identity lookup
+## Configuration (Environment Variables – main ones)
 
-Statistics and auditing
+- `PORT`  
+- `DATALOAD_ENDPOINT`  
+- `DATALOAD_TOKEN`  
+- `WEBSOCKET_PATH`  
+- `SSL_CERT_PATH` / `SSL_KEY_PATH`  
+- `WHITELIST_DB_HOST`, `WHITELIST_DB_PORT`, `WHITELIST_DB_USER`, `WHITELIST_DB_PASS`, `WHITELIST_DB_NAME`  
+- `PLUGINS_ENABLED`  
+- `HEALTH_INTERVAL`  
+- `MAX_CONNECTIONS`
 
-Access control
+Config file: `.env`
 
-Used by dashboards, automation tools, and access validation services.
+## Runtime & Operations
 
-5. Security & Reliability
+- Process management with **PM2**  
+- Start/stop scripts  
+- Locally managed HTTPS certificates  
+- Health checks and status endpoints for monitoring integration
 
-Security features:
+## Tech Stack
 
-HTTPS with TLS certificates
+- **Runtime**: Node.js 16+  
+- **Frameworks**: Express, ws  
+- **Database**: MySQL / MariaDB  
+- **Process Manager**: PM2  
+- **Security**: HTTPS, Bearer tokens, rate limiting  
+- **Integration**: REST APIs + WebSocket  
+- **Architecture**: Modular plugin pipeline + real-time streaming
 
-Bearer token authentication on REST endpoints
+## Engineering Concepts Demonstrated
 
-Token-based authentication for WebSocket connections
+- Telemetry & observability pipelines  
+- Modular plugin architectures  
+- Real-time data streaming  
+- Fault-tolerant ingestion & processing  
+- Secure API design  
+- Distributed system integration  
+- Operational monitoring and health checks
 
-Centralized configuration validation
+## My Role & Responsibilities
 
-Rate limiting and security headers
+- Full system architecture and data flow design  
+- Definition of plugin model and execution pipeline  
+- Implementation of authentication and security model  
+- Development of ingestion, processing, and real-time distribution layers  
+- Design of reliability mechanisms and operational controls  
+- AI-assisted development (with full production-grade validation of all components)
 
-Reliability features:
+## Outcomes & Learnings
 
-Plugin-level fault isolation
+- Built a production-like observability pipeline from scratch  
+- Practiced distributed systems design and integration  
+- Implemented real-time telemetry and monitoring workflows  
+- Designed fault-tolerant ingestion and processing pipelines  
+- Strengthened platform, infrastructure, and reliability engineering skills
 
-Retry logic for transient failures
+## Planned Future Improvements
 
-Structured logging
+- Message queue integration (Kafka / RabbitMQ)  
+- Persistent storage for historical telemetry  
+- Metrics export (Prometheus format)  
+- OAuth / JWT authentication  
+- Horizontal scaling with load balancing
 
-Health and status endpoints
+## License
 
-Connection limits and resource control
-
-6. Technologies & Stack
-
-Runtime: Node.js (16+)
-
-Frameworks: Express, ws (WebSocket)
-
-Database: MySQL / MariaDB
-
-Process management: PM2
-
-Security: HTTPS, Bearer tokens, rate limiting
-
-Integration: REST APIs, WebSocket
-
-Architecture: Modular plugin pipeline, real-time streaming
-
-7. Key Engineering Concepts Demonstrated
-
-Telemetry & observability pipelines
-
-Modular plugin architectures
-
-Real-time data streaming
-
-Fault-tolerant ingestion
-
-Secure API design
-
-Distributed system integration
-
-Operational monitoring and health checks
-
-8. Role & Responsibilities
-
-Designed the full system architecture and data flow
-
-Defined the plugin model and execution pipeline
-
-Implemented authentication and security model
-
-Built ingestion, processing, and real-time distribution layers
-
-Designed reliability mechanisms and operational controls
-
-Used AI-assisted development to accelerate implementation, validating all components for production reliability
-
-9. Outcomes & Learnings
-
-Built a production-like observability pipeline from scratch
-
-Practiced distributed system design and integration
-
-Implemented real-time telemetry and monitoring workflows
-
-Gained hands-on experience with reliability, security, and extensibility patterns
-
-Strengthened platform and infrastructure engineering skills
+This project is intended for educational and portfolio purposes only.
