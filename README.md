@@ -37,7 +37,9 @@ This portfolio reflects my transition into cloud, DevOps, SRE, and platform engi
 
 ## 📂 Projects
 
-### 🔹 Telemetry & Observability Middleware  
+### 🔹 [Telemetry & Observability Middleware](./projects/telemetry-observability/README.md)
+Production-like telemetry ingestion, plugin architecture, and real-time data distribution system.
+ 
 **Real-time Data Ingestion & Streaming Platform**
 
 Production-like middleware designed to ingest telemetry via REST, process data through a modular plugin pipeline, and distribute structured data in real time via WebSocket.
@@ -54,10 +56,9 @@ Key concepts:
 
 ---
 
-### 🔹 Identity Validation Platform  
-**Authentication & Access Control System**
 
-Custom identity and access control platform integrating API authentication, IP binding, session validation, and runtime authorization to protect a multi-user online service.
+### 🔹 [Identity Validation & Access Control Platform](./projects/identity-access-control/README.md)
+Distributed identity and access authorization system with token-based security and pre-authorization validation.
 
 Key concepts:
 - Authentication workflows  
@@ -71,8 +72,9 @@ Key concepts:
 
 ---
 
-### 🔹 Personal Cloud & Home Lab Platform  
-**Hybrid On-Prem & Cloud Infrastructure**
+
+### 🔹 [Personal Cloud & Home Lab Platform](./projects/cloud-home-lab/README.md)
+Hybrid on-prem and cloud infrastructure environment for virtualization, automation, networking, and internal tooling.
 
 Production-like infrastructure combining Proxmox virtualization and public cloud environments to host Linux services, automation workflows, and containerized workloads.
 
