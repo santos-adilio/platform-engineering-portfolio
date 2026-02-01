@@ -322,7 +322,7 @@ This is an academic project developed for educational purposes as part of the Ag
 
 ### 📧 Contact
 
-**Student:** Adilio Jose da Silva Santos  
+**Student:** Adilio Santos  
 **Institution:** UniFECAF  
 **Course:** Agile Methods  
 **Date:** November 2025
