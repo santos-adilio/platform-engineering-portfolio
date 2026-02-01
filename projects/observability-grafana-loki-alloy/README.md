@@ -141,6 +141,7 @@ Lessons Learned
 - Log enrichment via processing stages
 - Integration with metrics and traces (full observability stack)
 
+```mermaid
 flowchart LR
   %% ========== Sources ==========
   subgraph S[Log Sources (txAdmin)]
@@ -186,7 +187,7 @@ flowchart LR
 
   B3 --> T --> L1
   G1 --> L3
-
+```
 Author
 
 Adilio Santos
