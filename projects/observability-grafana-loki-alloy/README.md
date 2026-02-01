@@ -143,50 +143,51 @@ Lessons Learned
 
 ```mermaid
 flowchart LR
-  %% ========== Sources ==========
-  subgraph S[Log Sources (txAdmin)]
-    A1[fxserver.log]
-    A2[server.log]
-    A3[admin.log]
+
+  %% Log sources
+  subgraph LOGS["txAdmin Log Files"]
+    FX["fxserver.log"]
+    SV["server.log"]
+    AD["admin.log"]
   end
 
-  %% ========== Collector ==========
-  subgraph C[Grafana Alloy (Agent)]
-    B1[loki.source.file<br/>targets + labels]
-    B2[loki.process<br/>pipeline (optional)]
-    B3[loki.write<br/>HTTP push]
-    B1 --> B2 --> B3
+  %% Alloy agent
+  subgraph ALLOY["Grafana Alloy Agent"]
+    SRC["loki.source.file"]
+    PROC["loki.process"]
+    WR["loki.write"]
+    SRC --> PROC --> WR
   end
 
-  %% ========== Transport / Network ==========
-  subgraph N[Private Network]
-    T[Tailscale DNS<br/>devops-sre.taild8300.ts.net]
+  %% Network
+  subgraph NET["Private Network"]
+    TS["Tailscale DNS"]
   end
 
-  %% ========== Loki ==========
-  subgraph L[Grafana Loki (Central)]
-    L1[/HTTP Push API<br/>/loki/api/v1/push/]
-    L2[(Ingester / TSDB)]
-    L3[/Query API<br/>LogQL/]
-    L1 --> L2
-    L2 --> L3
+  %% Loki
+  subgraph LOKI["Grafana Loki"]
+    PUSH["HTTP Push API"]
+    ING["Ingester / TSDB"]
+    QUERY["LogQL Query API"]
+    PUSH --> ING --> QUERY
   end
 
-  %% ========== Grafana ==========
-  subgraph G[Grafana]
-    G1[Datasource: Loki]
-    G2[Dashboards<br/>Last 1h + dropdown filters]
-    G3[Panels / Cards<br/>Error, Exceptions, Scripts, Volume]
-    G1 --> G2 --> G3
+  %% Grafana
+  subgraph GRAF["Grafana"]
+    DS["Loki Datasource"]
+    DASH["Dashboards (Last 1h)"]
+    PAN["Panels and Filters"]
+    DS --> DASH --> PAN
   end
 
-  %% ========== Flows ==========
-  A1 --> B1
-  A2 --> B1
-  A3 --> B1
+  %% Flow
+  FX --> SRC
+  SV --> SRC
+  AD --> SRC
 
-  B3 --> T --> L1
-  G1 --> L3
+  WR --> TS --> PUSH
+  DS --> QUERY
+
 ```
 Author
 
